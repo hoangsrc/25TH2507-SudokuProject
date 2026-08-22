@@ -47,6 +47,10 @@ public class TimerHelper {
         updateDisplay();
     }
 
+    public void setSecondsElapsed(long seconds) {
+        this.secondsElapsed = seconds;
+    }
+
     public long getSecondsElapsed() { return secondsElapsed; }
 
     public static String formatTime(long seconds) {

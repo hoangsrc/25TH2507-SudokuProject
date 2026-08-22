@@ -7,21 +7,35 @@
     android:padding="16dp">
 
     <!-- Header: Chế độ, Lỗi và Đồng hồ -->
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Nút Trở về (Ngôi nhà) -->
         <TextView
-            android:id="@+id/tvCurrentDifficulty"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="🏠"
+            android:textSize="24sp"
+            android:textColor="#333333"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp" />
+
+        <!-- TextView này dùng weight="1" để tự động đẩy Lỗi và Đồng hồ sang mép phải -->
+        <TextView
+            android:id="@+id/tvCurrentDifficulty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Chế độ: Dễ"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_alignParentStart="true"/>
+            android:textColor="#333333" />
 
-        <!-- Thêm Text đếm số lỗi ở giữa màn hình -->
         <TextView
             android:id="@+id/tvMistakes"
             android:layout_width="wrap_content"
@@ -30,7 +44,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#DC2626"
-            android:layout_centerInParent="true"/>
+            android:layout_marginEnd="16dp" />
 
         <TextView
             android:id="@+id/tvTimer"
@@ -39,9 +53,8 @@
             android:text="00:00"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#2563EB"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
+            android:textColor="#2563EB" />
+    </LinearLayout>
 
     <!-- Bọc GridLayout để căn giữa, chống bị kéo giãn tạo mảng đen -->
     <LinearLayout

@@ -4,82 +4,86 @@ import java.util.Random;
 
 public class PuzzleRepository {
 
-    // Biến lưu lại vị trí đề vừa chơi để ván sau không bốc trùng lại
-    private static int lastEasyIndex = -1;
-    private static int lastHardIndex = -1;
-
+    // EASY: Tổng cộng 3 đề
     private static final String[][] EASY_PUZZLES = {
-            {
-                    "530070000600195000098000060800060003400803001700020006060000280000419005000080079",
-                    "534678912672195348198342567859761423426853791713924856961537284287419635345286179"
-            },
-            {
-                    "000260701680070090190004500820100040004602900050003028009300074040050036703018000",
-                    "435269781682571493197834562826195347374682915951743628519326874248957136763418259"
-            },
-            {
-                    "000000907000420180000705026100904000050000040000507009920108000034059000507000000",
-                    "245816937369427185817735426172984563658273841493567219926148753734659821587392694"
-            },
-            // Đề #7244 (Aug 14, 2026)
-            {
-                    "600007900200605007003000108056240000400000005090000084040030020005100300060400070",
-                    "614387952289651437573924168856249713437816295192573684941735826725168349368492571"
-            },
-            // Đề #7237 (Aug 07, 2026)
-            {
-                    "900008005000903060068070000402003700800700004057040600000801020010007580085000100",
-                    "924168375571934862368572419492683751836715294157249638743851926619427583285396147"
-            }
+            {"590060040000704009307000000003400000085900430400057060070000308038205000000840600", "592168743816734529347592186763481295185926437429357861274619358638275914951843672"},
+            {"753000009000430002009100080070004900940000530008901004300010020060700100000096040", "753862419186439752429175386275384961941627538638951274394518627862743195517296843"},
+            {"023409006000002037700530000065000004394706050017005029470013000638050000950087040", "123479586589162437746538912265891374394726158817345629472913865638254791951687243"}
     };
 
-    private static final String[][] HARD_PUZZLES = {
-            {
-                    "000000012000000003002300400001800005060070800000009000008500000900040500470006000",
-                    "694785312185294673732361458924183795563972841817659234328517964956843527471236189"
-            },
-            {
-                    "800000000003600000070090200050007000000045700000100030001000068008500010090000400",
-                    "812753649943682175675491283154237896369845721287169534521974368438526917796318452"
-            }
+    // MEDIUM: Tổng cộng 3 đề
+    private static final String[][] MEDIUM_PUZZLES = {
+            {"007000306093040000000370040060190007300008650502000400000007024200901800730000100", "427519386693842715158376942864195237379428651512763498981637524246951873735284169"},
+            {"060091070095700000000204150000609004073040000000070260040007600501020007700003005", "462591873195738426837264159258619734673842591914375268349157682581926347726483915"},
+            {"009000005000000000008010074920810500003200008051304600008072010340900780007008000", "219746835734589261685123974926817543473265198851394627568472319342951786197638452"}
     };
+
+    // HARD: Tổng cộng 5 đề
+    private static final String[][] HARD_PUZZLES = {
+            {"200300001904501000500000630090005700008097000003600809040000058370010020010250000", "267384591934561287581729634196835742428197365753642819642973158375418926819256473"},
+            {"510300006800000073006507040760000800005710090400058000000109000053670000070000209", "517384926842961573396527148761493852285716394439258617628149735953672481174835269"},
+            {"040050103003009500000000000050070000000008709007090130700600035000047000009085270", "247856193863719524195234867958473612312568749674921358781692435526347981439185276"},
+            {"005009600060000094090170050704580000100000048003014002000001260070005400901600000", "815439627367852194492176853724583916159267348683914572538741269276395481941628735"},
+            {"070000580005060007100002006200741000500009070730000609010026300002400060096000008", "673914582925368147148572936269741853581639274734285619417826395852493761396157428"}
+    };
+
+    // EXPERT: Tổng cộng 4 đề
+    private static final String[][] EXPERT_PUZZLES = {
+            {"080300060007902080002010005700820000260003100000007806009001670470000008000035010", "185374269637952481942618735714826593268593147593147826359481672471269358826735914"},
+            {"039800007000050090070090036906002003000008100500901004020049300304000010000680900", "439816257862357491175294836916472583247538169583961724628149375394725618751683942"},
+            {"000000027080000500000831000000090010000007090006280000400700180370405000000020000", "613549827984672531257831649745396218832157496196284753429763185378415962561928374"},
+            {"000040580941080000008700910400005008063008000000900703000000206850607000007004051", "376149582941582367528736914419375628763428195285961743194853276852617439637294851"}
+    };
+
+    // MASTER: Tổng cộng 1 đề
+    private static final String[][] MASTER_PUZZLES = {
+            {"900010006200506300050040000020709004300000080000050000000001000070602009009000400", "983217546247586391651943278528769134396124785714358962832491657475632819169875423"}
+    };
+
+    // Lưu lại index của đề vừa chơi để không bị bốc trùng
+    private static int lastEasyIndex = -1;
+    private static int lastMediumIndex = -1;
+    private static int lastHardIndex = -1;
+    private static int lastExpertIndex = -1;
+    private static int lastMasterIndex = -1;
 
     public static int[][][] getRandomPuzzle(String difficulty) {
         String[][] targetCategory;
-        int lastIndex;
-        boolean isHard = difficulty.equals("Hard") || difficulty.equals("Expert");
+        int lastIndex = -1;
 
-        if (isHard) {
-            targetCategory = HARD_PUZZLES;
-            lastIndex = lastHardIndex;
-        } else {
-            targetCategory = EASY_PUZZLES;
-            lastIndex = lastEasyIndex;
+        switch (difficulty.toUpperCase()) {
+            case "MEDIUM": targetCategory = MEDIUM_PUZZLES; lastIndex = lastMediumIndex; break;
+            case "HARD":   targetCategory = HARD_PUZZLES; lastIndex = lastHardIndex; break;
+            case "EXPERT": targetCategory = EXPERT_PUZZLES; lastIndex = lastExpertIndex; break;
+            case "MASTER": targetCategory = MASTER_PUZZLES; lastIndex = lastMasterIndex; break;
+            case "EASY":
+            default:       targetCategory = EASY_PUZZLES; lastIndex = lastEasyIndex; break;
         }
 
         Random rand = new Random();
-        int index;
+        int randomIndex = rand.nextInt(targetCategory.length);
 
-        // THUẬT TOÁN CHỐNG TRÙNG ĐỀ: Bốc liên tục cho đến khi nào ra số khác ván trước thì thôi
+        // Vòng lặp đảm bảo đề mới khác đề cũ (nếu có nhiều hơn 1 đề)
         if (targetCategory.length > 1) {
-            do {
-                index = rand.nextInt(targetCategory.length);
-            } while (index == lastIndex);
-        } else {
-            index = 0;
+            while (randomIndex == lastIndex) {
+                randomIndex = rand.nextInt(targetCategory.length);
+            }
         }
 
-        // Lưu lại vị trí vừa bốc để dành kiểm tra cho ván tiếp theo
-        if (isHard) {
-            lastHardIndex = index;
-        } else {
-            lastEasyIndex = index;
+        // Cập nhật lại index vừa bốc
+        switch (difficulty.toUpperCase()) {
+            case "MEDIUM": lastMediumIndex = randomIndex; break;
+            case "HARD":   lastHardIndex = randomIndex; break;
+            case "EXPERT": lastExpertIndex = randomIndex; break;
+            case "MASTER": lastMasterIndex = randomIndex; break;
+            case "EASY":
+            default:       lastEasyIndex = randomIndex; break;
         }
 
-        String initialStr = targetCategory[index][0];
-        String solutionStr = targetCategory[index][1];
+        String puzzleStr = targetCategory[randomIndex][0];
+        String solutionStr = targetCategory[randomIndex][1];
 
-        return new int[][][]{ parseStringToArray(initialStr), parseStringToArray(solutionStr) };
+        return new int[][][]{ parseStringToArray(puzzleStr), parseStringToArray(solutionStr) };
     }
 
     private static int[][] parseStringToArray(String data) {

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Stack;
+import android.content.SharedPreferences;
 
 import ntu.minhhoangg.duanketthucmonhoc.R;
 import ntu.minhhoangg.duanketthucmonhoc.data.PuzzleRepository;
@@ -55,7 +56,19 @@ public class GameActivity extends AppCompatActivity {
         initViews();
         setupNumPad();
         setupToolBar();
-        loadNewGame();
+        SharedPreferences prefs = getSharedPreferences("SudokuData", MODE_PRIVATE);
+        boolean hasSavedGame = prefs.getBoolean(difficulty + "_hasSavedGame", false);
+
+        if (hasSavedGame) {
+            restoreSavedGame();
+        } else {
+            loadNewGame();
+        }
+        TextView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            saveCurrentProgress(); // Bấm là lưu ngay lập tức
+            finish(); // Đóng màn hình Game, quay về Home
+        });
     }
 
     private void initViews() {
@@ -74,7 +87,122 @@ public class GameActivity extends AppCompatActivity {
             tvMistakes.setText("Lỗi: " + mistakesCount + "/3");
         }
     }
+    private void saveCurrentProgress() {
+        if (timerHelper != null) {
+            timerHelper.pause(); // Dừng đồng hồ trước khi lưu
+        }
 
+        SharedPreferences prefs = getSharedPreferences("SudokuData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Dùng tên chế độ (Easy, Medium...) làm tiền tố để lưu tách biệt
+        String prefix = difficulty;
+
+        // Lưu tiến trình: Lỗi và Thời gian
+        editor.putInt(prefix + "_mistakes", mistakesCount);
+        editor.putLong(prefix + "_time", timerHelper.getSecondsElapsed());
+
+        // Chuyển mảng board thành chuỗi 81 ký tự để lưu
+        StringBuilder currentBoardStr = new StringBuilder();
+        StringBuilder initialBoardStr = new StringBuilder();
+        StringBuilder solutionBoardStr = new StringBuilder();
+
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                currentBoardStr.append(board[r][c].getValue());
+                // Lưu lại ô nào là đề bài (cố định)
+                initialBoardStr.append(board[r][c].isFixed() ? board[r][c].getValue() : "0");
+                solutionBoardStr.append(board[r][c].getSolutionValue());
+            }
+        }
+
+        editor.putString(prefix + "_currentBoard", currentBoardStr.toString());
+        editor.putString(prefix + "_initialBoard", initialBoardStr.toString());
+        editor.putString(prefix + "_solutionBoard", solutionBoardStr.toString());
+
+        // Đánh dấu là chế độ này đang có một ván chơi dở
+        editor.putBoolean(prefix + "_hasSavedGame", true);
+
+        editor.apply(); // Lưu vào bộ nhớ máy
+    }
+    private void restoreSavedGame() {
+        SharedPreferences prefs = getSharedPreferences("SudokuData", MODE_PRIVATE);
+        String prefix = difficulty;
+
+        // Khôi phục lỗi
+        mistakesCount = prefs.getInt(prefix + "_mistakes", 0);
+        updateMistakesUI();
+
+        // Khôi phục thời gian
+        long savedTime = prefs.getLong(prefix + "_time", 0);
+        // Nếu TimerHelper của bạn chưa có hàm setSecondsElapsed(savedTime) thì thêm vào nhé!
+
+        String currentStr = prefs.getString(prefix + "_currentBoard", "");
+        String initialStr = prefs.getString(prefix + "_initialBoard", "");
+        String solutionStr = prefs.getString(prefix + "_solutionBoard", "");
+
+        if (currentStr.length() != 81) {
+            loadNewGame(); // Dữ liệu lỗi thì tạo ván mới
+            return;
+        }
+
+        gridBoard.removeAllViews();
+        moveStack.clear();
+        selectedRow = -1;
+        selectedCol = -1;
+
+        int paddingPx = (int) (32 * getResources().getDisplayMetrics().density);
+        int displayWidth = getResources().getDisplayMetrics().widthPixels - paddingPx;
+        int cellSize = (displayWidth - 40) / 9; // Trừ hao 40px viền
+
+        for (int i = 0; i < 81; i++) {
+            int r = i / 9;
+            int c = i % 9;
+
+            int currentVal = currentStr.charAt(i) - '0';
+            boolean isFixed = initialStr.charAt(i) != '0';
+            int solutionVal = solutionStr.charAt(i) - '0';
+
+            board[r][c] = new SudokuCell(r, c, currentVal, solutionVal, isFixed);
+
+            // Vẽ giao diện cho từng ô
+            TextView cellView = new TextView(this);
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = cellSize;
+            params.height = cellSize;
+            params.rowSpec = GridLayout.spec(r, GridLayout.CENTER);
+            params.columnSpec = GridLayout.spec(c, GridLayout.CENTER);
+
+            int leftMargin = (c % 3 == 0) ? 4 : 1;
+            int topMargin = (r % 3 == 0) ? 4 : 1;
+            int rightMargin = (c == 8) ? 4 : 1;
+            int bottomMargin = (r == 8) ? 4 : 1;
+            params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+
+            cellView.setLayoutParams(params);
+            cellView.setGravity(Gravity.CENTER);
+
+            final int finalR = r;
+            final int finalC = c;
+            cellView.setOnClickListener(v -> selectCell(finalR, finalC));
+
+            cellViews[r][c] = cellView;
+            gridBoard.addView(cellView);
+        }
+
+        validateBoard();
+        updateBoardUI();
+
+        timerHelper.reset();
+        timerHelper.setSecondsElapsed(savedTime); // Gọi hàm để gán lại thời gian
+        timerHelper.start();
+    }
+    private void clearSavedProgress() {
+        SharedPreferences prefs = getSharedPreferences("SudokuData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(difficulty + "_hasSavedGame", false);
+        editor.apply();
+    }
     private void loadNewGame() {
         gridBoard.removeAllViews();
         gridBoard.setAlignmentMode(GridLayout.ALIGN_BOUNDS); // Chống xô lệch chữ
@@ -93,7 +221,7 @@ public class GameActivity extends AppCompatActivity {
 
         int paddingPx = (int) (32 * getResources().getDisplayMetrics().density);
         int displayWidth = getResources().getDisplayMetrics().widthPixels - paddingPx;
-        int cellSize = displayWidth / 9;
+        int cellSize = (displayWidth - 40) / 9;
 
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
@@ -329,6 +457,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showGameOverDialog() {
+        clearSavedProgress();
         timerHelper.pause();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Game Over! 😢");
@@ -344,11 +473,16 @@ public class GameActivity extends AppCompatActivity {
     private void checkWinCondition() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
+                // Nếu còn ô trống hoặc có ô sai thì thoát luôn, không làm gì cả
                 if (board[r][c].getValue() == 0 || !board[r][c].isValid()) {
                     return;
                 }
             }
         }
+
+        // ĐÃ VƯỢT QUA VÒNG LẶP = CHẮC CHẮN CHIẾN THẮNG!
+        // Lúc này mới được xóa tiến trình lưu dở để lần sau chơi ván mới.
+        clearSavedProgress();
 
         timerHelper.pause();
         long timeTaken = timerHelper.getSecondsElapsed();
