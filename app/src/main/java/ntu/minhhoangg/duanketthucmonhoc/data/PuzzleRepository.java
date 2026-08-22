@@ -2,43 +2,91 @@ package ntu.minhhoangg.duanketthucmonhoc.data;
 
 import java.util.Random;
 
-/**
- * Kho lưu trữ đề bài và đáp án Sudoku (Hardcode mảng 2 chiều).
- */
 public class PuzzleRepository {
 
-    // Mẫu đề bài (0 đại diện cho ô trống)
-    private static final int[][][] EASY_PUZZLES = {
+    // Biến lưu lại vị trí đề vừa chơi để ván sau không bốc trùng lại
+    private static int lastEasyIndex = -1;
+    private static int lastHardIndex = -1;
+
+    private static final String[][] EASY_PUZZLES = {
             {
-                    {5, 3, 0, 0, 7, 0, 0, 0, 0},
-                    {6, 0, 0, 1, 9, 5, 0, 0, 0},
-                    {0, 9, 8, 0, 0, 0, 0, 6, 0},
-                    {8, 0, 0, 0, 6, 0, 0, 0, 3},
-                    {4, 0, 0, 8, 0, 3, 0, 0, 1},
-                    {7, 0, 0, 0, 2, 0, 0, 0, 6},
-                    {0, 6, 0, 0, 0, 0, 2, 8, 0},
-                    {0, 0, 0, 4, 1, 9, 0, 0, 5},
-                    {0, 0, 0, 0, 8, 0, 0, 7, 9}
+                    "530070000600195000098000060800060003400803001700020006060000280000419005000080079",
+                    "534678912672195348198342567859761423426853791713924856961537284287419635345286179"
+            },
+            {
+                    "000260701680070090190004500820100040004602900050003028009300074040050036703018000",
+                    "435269781682571493197834562826195347374682915951743628519326874248957136763418259"
+            },
+            {
+                    "000000907000420180000705026100904000050000040000507009920108000034059000507000000",
+                    "245816937369427185817735426172984563658273841493567219926148753734659821587392694"
+            },
+            // Đề #7244 (Aug 14, 2026)
+            {
+                    "600007900200605007003000108056240000400000005090000084040030020005100300060400070",
+                    "614387952289651437573924168856249713437816295192573684941735826725168349368492571"
+            },
+            // Đề #7237 (Aug 07, 2026)
+            {
+                    "900008005000903060068070000402003700800700004057040600000801020010007580085000100",
+                    "924168375571934862368572419492683751836715294157249638743851926619427583285396147"
             }
     };
 
-    private static final int[][][] EASY_SOLUTIONS = {
+    private static final String[][] HARD_PUZZLES = {
             {
-                    {5, 3, 4, 6, 7, 8, 9, 1, 2},
-                    {6, 7, 2, 1, 9, 5, 3, 4, 8},
-                    {1, 9, 8, 3, 4, 2, 5, 6, 7},
-                    {8, 5, 9, 7, 6, 1, 4, 2, 3},
-                    {4, 2, 6, 8, 5, 3, 7, 9, 1},
-                    {7, 1, 3, 9, 2, 4, 8, 5, 6},
-                    {9, 6, 1, 5, 3, 7, 2, 8, 4},
-                    {2, 8, 7, 4, 1, 9, 6, 3, 5},
-                    {3, 4, 5, 2, 8, 6, 1, 7, 9}
+                    "000000012000000003002300400001800005060070800000009000008500000900040500470006000",
+                    "694785312185294673732361458924183795563972841817659234328517964956843527471236189"
+            },
+            {
+                    "800000000003600000070090200050007000000045700000100030001000068008500010090000400",
+                    "812753649943682175675491283154237896369845721287169534521974368438526917796318452"
             }
     };
 
     public static int[][][] getRandomPuzzle(String difficulty) {
-        Random random = new Random();
-        int index = random.nextInt(EASY_PUZZLES.length);
-        return new int[][][]{ EASY_PUZZLES[index], EASY_SOLUTIONS[index] };
+        String[][] targetCategory;
+        int lastIndex;
+        boolean isHard = difficulty.equals("Hard") || difficulty.equals("Expert");
+
+        if (isHard) {
+            targetCategory = HARD_PUZZLES;
+            lastIndex = lastHardIndex;
+        } else {
+            targetCategory = EASY_PUZZLES;
+            lastIndex = lastEasyIndex;
+        }
+
+        Random rand = new Random();
+        int index;
+
+        // THUẬT TOÁN CHỐNG TRÙNG ĐỀ: Bốc liên tục cho đến khi nào ra số khác ván trước thì thôi
+        if (targetCategory.length > 1) {
+            do {
+                index = rand.nextInt(targetCategory.length);
+            } while (index == lastIndex);
+        } else {
+            index = 0;
+        }
+
+        // Lưu lại vị trí vừa bốc để dành kiểm tra cho ván tiếp theo
+        if (isHard) {
+            lastHardIndex = index;
+        } else {
+            lastEasyIndex = index;
+        }
+
+        String initialStr = targetCategory[index][0];
+        String solutionStr = targetCategory[index][1];
+
+        return new int[][][]{ parseStringToArray(initialStr), parseStringToArray(solutionStr) };
+    }
+
+    private static int[][] parseStringToArray(String data) {
+        int[][] grid = new int[9][9];
+        for (int i = 0; i < 81; i++) {
+            grid[i / 9][i % 9] = data.charAt(i) - '0';
+        }
+        return grid;
     }
 }

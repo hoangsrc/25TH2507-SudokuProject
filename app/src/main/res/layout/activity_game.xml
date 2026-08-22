@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header: Chế độ, Lỗi và Đồng hồ -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+        <TextView
+            android:id="@+id/tvCurrentDifficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chế độ: Dễ"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_alignParentStart="true"/>
+
+        <!-- Thêm Text đếm số lỗi ở giữa màn hình -->
+        <TextView
+            android:id="@+id/tvMistakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lỗi: 0/3"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#DC2626"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#2563EB"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <!-- Bọc GridLayout để căn giữa, chống bị kéo giãn tạo mảng đen -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <GridLayout
+            android:id="@+id/gridBoard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#1E293B"
+            android:columnCount="9"
+            android:rowCount="9" />
+    </LinearLayout>
+
+    <!-- Thanh công cụ (Undo, Erase, Notes, Hint) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="16dp">
+
+        <Button
+            android:id="@+id/btnUndo"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hoàn tác" />
+
+        <Button
+            android:id="@+id/btnErase"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Xóa" />
+
+        <Button
+            android:id="@+id/btnNotes"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ghi chú" />
+
+        <Button
+            android:id="@+id/btnHint"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Gợi ý" />
+    </LinearLayout>
+
+    <!-- Bàn phím số 1-9 -->
+    <LinearLayout
+        android:id="@+id/layoutNumPad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <!-- Nút điều khiển game -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnNewGame"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#3B82F6"
+            android:text="Ván mới"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#64748B"
+            android:text="Chơi lại"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</LinearLayout>
