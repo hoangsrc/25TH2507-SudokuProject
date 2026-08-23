@@ -17,7 +17,6 @@ import java.util.Stack;
 import ntu.minhhoangg.duanketthucmonhoc.R;
 import ntu.minhhoangg.duanketthucmonhoc.data.PuzzleRepository;
 import ntu.minhhoangg.duanketthucmonhoc.data.ScoreManager;
-import ntu.minhhoangg.duanketthucmonhoc.logic.SudokuValidator;
 import ntu.minhhoangg.duanketthucmonhoc.model.MoveHistory;
 import ntu.minhhoangg.duanketthucmonhoc.model.SudokuCell;
 import ntu.minhhoangg.duanketthucmonhoc.util.TimerHelper;
@@ -25,8 +24,9 @@ import ntu.minhhoangg.duanketthucmonhoc.util.TimerHelper;
 public class GameActivity extends AppCompatActivity {
 
     private static final String PREF_NAME = "SudokuData";
-    private static final int MAX_MISTAKES = 3;
-    private static final int INITIAL_HINTS = 3;
+
+    private int maxMistakes;
+    private int initialHints;
 
     private String difficulty;
     private SudokuCell[][] board = new SudokuCell[9][9];
@@ -37,7 +37,7 @@ public class GameActivity extends AppCompatActivity {
     private boolean isNoteMode = false;
 
     private int mistakesCount = 0;
-    private int hintsRemaining = INITIAL_HINTS;
+    private int hintsRemaining;
     private int hintedRow = -1;
     private int hintedCol = -1;
 
@@ -48,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
     private Stack<MoveHistory> moveStack = new Stack<>();
     private TimerHelper timerHelper;
     private ScoreManager scoreManager;
+    private Button[] numButtons = new Button[9];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,10 @@ public class GameActivity extends AppCompatActivity {
 
         difficulty = getIntent().getStringExtra("DIFFICULTY");
         if (difficulty == null) difficulty = "Easy";
+
+        // Khởi tạo độ khó hệ thống
+        maxMistakes = getMaxMistakesByDifficulty();
+        initialHints = getInitialHintsByDifficulty();
 
         scoreManager = new ScoreManager(this);
         initViews();
@@ -77,6 +82,28 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    private int getMaxMistakesByDifficulty() {
+        switch (difficulty.toUpperCase()) {
+            case "EASY": return 5;
+            case "MEDIUM": return 4;
+            case "HARD": return 3;
+            case "EXPERT": return 2;
+            case "MASTER": return 1;
+            default: return 3;
+        }
+    }
+
+    private int getInitialHintsByDifficulty() {
+        switch (difficulty.toUpperCase()) {
+            case "EASY": return 5;
+            case "MEDIUM": return 3;
+            case "HARD": return 2;
+            case "EXPERT": return 1;
+            case "MASTER": return 0;
+            default: return 3;
+        }
+    }
+
     private void initViews() {
         gridBoard = findViewById(R.id.gridBoard);
         tvTimer = findViewById(R.id.tvTimer);
@@ -90,7 +117,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateMistakesUI() {
         if (tvMistakes != null) {
-            tvMistakes.setText("Lỗi: " + mistakesCount + "/" + MAX_MISTAKES);
+            tvMistakes.setText("Lỗi: " + mistakesCount + "/" + maxMistakes);
         }
     }
 
@@ -113,7 +140,6 @@ public class GameActivity extends AppCompatActivity {
         editor.putLong(difficulty + "_time", timerHelper.getSecondsElapsed());
         editor.putInt(difficulty + "_hints", hintsRemaining);
 
-        // Serialize board state
         StringBuilder currentBoardStr = new StringBuilder();
         StringBuilder initialBoardStr = new StringBuilder();
         StringBuilder solutionBoardStr = new StringBuilder();
@@ -156,7 +182,7 @@ public class GameActivity extends AppCompatActivity {
         selectedCol = -1;
         hintedRow = -1;
         hintedCol = -1;
-        hintsRemaining = prefs.getInt(difficulty + "_hints", INITIAL_HINTS);
+        hintsRemaining = prefs.getInt(difficulty + "_hints", initialHints);
         updateHintUI();
 
         int paddingPx = (int) (32 * getResources().getDisplayMetrics().density);
@@ -220,7 +246,7 @@ public class GameActivity extends AppCompatActivity {
         hintedRow = -1;
         hintedCol = -1;
         mistakesCount = 0;
-        hintsRemaining = INITIAL_HINTS;
+        hintsRemaining = initialHints;
 
         updateMistakesUI();
         updateHintUI();
@@ -262,7 +288,7 @@ public class GameActivity extends AppCompatActivity {
                 gridBoard.addView(cellView);
             }
         }
-
+        validateBoard();
         updateBoardUI();
         timerHelper.reset();
         timerHelper.start();
@@ -327,6 +353,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
+        updateNumPadUI();
     }
 
     private void selectCell(int r, int c) {
@@ -335,6 +362,7 @@ public class GameActivity extends AppCompatActivity {
         hintedRow = -1;
         hintedCol = -1;
         updateBoardUI();
+        updateNumPadUI();
     }
 
     private boolean isValidPlacement(int r, int c, int num) {
@@ -372,6 +400,31 @@ public class GameActivity extends AppCompatActivity {
             final int number = i;
             btnNum.setOnClickListener(v -> onNumberClick(number));
             layoutNumPad.addView(btnNum);
+
+            numButtons[i - 1] = btnNum;
+        }
+    }
+
+    private void updateNumPadUI() {
+        int[] numberCounts = new int[10];
+
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                SudokuCell cell = board[r][c];
+                if (cell != null && cell.getValue() != 0 && cell.isValid()) {
+                    numberCounts[cell.getValue()]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            if (numButtons[i] != null) {
+                if (numberCounts[i + 1] == 9) {
+                    numButtons[i].setVisibility(android.view.View.INVISIBLE);
+                } else {
+                    numButtons[i].setVisibility(android.view.View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -397,7 +450,7 @@ public class GameActivity extends AppCompatActivity {
                 mistakesCount++;
                 updateMistakesUI();
 
-                if (mistakesCount >= MAX_MISTAKES) {
+                if (mistakesCount >= maxMistakes) {
                     updateBoardUI();
                     showGameOverDialog();
                     return;
@@ -467,7 +520,6 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Đảm bảo số tìm được phải khớp 100% với đáp án thực tế
                         if (possibleCount == 1 && lastValidNum == board[r][c].getSolutionValue()) {
                             applyHint(r, c, lastValidNum);
                             return;
@@ -499,7 +551,7 @@ public class GameActivity extends AppCompatActivity {
             }
             moveStack.clear();
             mistakesCount = 0;
-            hintsRemaining = INITIAL_HINTS;
+            hintsRemaining = initialHints;
             hintedRow = -1;
             hintedCol = -1;
 
@@ -536,7 +588,7 @@ public class GameActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Game Over! 😢")
-                .setMessage("Bạn đã sai quá 3 lần. Đừng nản chí, hãy thử lại nhé!")
+                .setMessage("Bạn đã sai quá " + maxMistakes + " lần. Đừng nản chí, hãy thử lại nhé!")
                 .setPositiveButton("Chơi lại ván này", (dialog, which) -> findViewById(R.id.btnRestart).performClick())
                 .setNegativeButton("Tạo ván mới", (dialog, which) -> loadNewGame())
                 .setCancelable(false)
