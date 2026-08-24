@@ -14,6 +14,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
+
         <!-- Nút Trở về (Ngôi nhà) -->
         <TextView
             android:id="@+id/btnBack"
@@ -56,6 +57,33 @@
             android:textColor="#2563EB" />
     </LinearLayout>
 
+    <!-- Nút điều khiển game -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnNewGame"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#3B82F6"
+            android:text="Ván mới"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:backgroundTint="#64748B"
+            android:text="Chơi lại"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
     <!-- Bọc GridLayout để căn giữa, chống bị kéo giãn tạo mảng đen -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +114,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Hoàn tác" />
+            android:text="Undo" />
 
         <Button
             android:id="@+id/btnErase"
@@ -122,30 +150,5 @@
         android:gravity="center"
         android:orientation="horizontal" />
 
-    <!-- Nút điều khiển game -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnNewGame"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
-            android:backgroundTint="#3B82F6"
-            android:text="Ván mới"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnRestart"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:backgroundTint="#64748B"
-            android:text="Chơi lại"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
 </LinearLayout>
