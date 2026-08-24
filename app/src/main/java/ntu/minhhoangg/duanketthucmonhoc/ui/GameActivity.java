@@ -11,13 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.util.Stack;
 
 import ntu.minhhoangg.duanketthucmonhoc.R;
 import ntu.minhhoangg.duanketthucmonhoc.data.PuzzleRepository;
 import ntu.minhhoangg.duanketthucmonhoc.data.ScoreManager;
-import ntu.minhhoangg.duanketthucmonhoc.logic.SudokuValidator;
 import ntu.minhhoangg.duanketthucmonhoc.model.MoveHistory;
 import ntu.minhhoangg.duanketthucmonhoc.model.SudokuCell;
 import ntu.minhhoangg.duanketthucmonhoc.util.TimerHelper;
@@ -25,8 +26,9 @@ import ntu.minhhoangg.duanketthucmonhoc.util.TimerHelper;
 public class GameActivity extends AppCompatActivity {
 
     private static final String PREF_NAME = "SudokuData";
-    private static final int MAX_MISTAKES = 3;
-    private static final int INITIAL_HINTS = 3;
+    private int maxMistakes;
+    private int initialHints;
+    private Button[] numButtons = new Button[9];
 
     private String difficulty;
     private SudokuCell[][] board = new SudokuCell[9][9];
@@ -37,7 +39,7 @@ public class GameActivity extends AppCompatActivity {
     private boolean isNoteMode = false;
 
     private int mistakesCount = 0;
-    private int hintsRemaining = INITIAL_HINTS;
+    private int hintsRemaining;
     private int hintedRow = -1;
     private int hintedCol = -1;
 
@@ -51,11 +53,15 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         difficulty = getIntent().getStringExtra("DIFFICULTY");
         if (difficulty == null) difficulty = "Easy";
+        maxMistakes = getMaxMistakesByDifficulty();
+        initialHints = getInitialHintsByDifficulty();
+        hintsRemaining = initialHints;
 
         scoreManager = new ScoreManager(this);
         initViews();
@@ -77,6 +83,28 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    private int getMaxMistakesByDifficulty() {
+        switch (difficulty.toUpperCase()) {
+            case "EASY": return 5;
+            case "MEDIUM": return 4;
+            case "HARD": return 3;
+            case "EXPERT": return 2;
+            case "MASTER": return 1;
+            default: return 3;
+        }
+    }
+
+    private int getInitialHintsByDifficulty() {
+        switch (difficulty.toUpperCase()) {
+            case "EASY": return 5;
+            case "MEDIUM": return 3;
+            case "HARD": return 2;
+            case "EXPERT": return 1;
+            case "MASTER": return 0;
+            default: return 3;
+        }
+    }
+
     private void initViews() {
         gridBoard = findViewById(R.id.gridBoard);
         tvTimer = findViewById(R.id.tvTimer);
@@ -90,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateMistakesUI() {
         if (tvMistakes != null) {
-            tvMistakes.setText("Lỗi: " + mistakesCount + "/" + MAX_MISTAKES);
+            tvMistakes.setText("Lỗi: " + mistakesCount + "/" + maxMistakes);
         }
     }
 
@@ -156,7 +184,7 @@ public class GameActivity extends AppCompatActivity {
         selectedCol = -1;
         hintedRow = -1;
         hintedCol = -1;
-        hintsRemaining = prefs.getInt(difficulty + "_hints", INITIAL_HINTS);
+        hintsRemaining = prefs.getInt(difficulty + "_hints", initialHints);
         updateHintUI();
 
         int paddingPx = (int) (32 * getResources().getDisplayMetrics().density);
@@ -220,7 +248,7 @@ public class GameActivity extends AppCompatActivity {
         hintedRow = -1;
         hintedCol = -1;
         mistakesCount = 0;
-        hintsRemaining = INITIAL_HINTS;
+        hintsRemaining = initialHints;
 
         updateMistakesUI();
         updateHintUI();
@@ -327,6 +355,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
+        updateNumPadUI();
     }
 
     private void selectCell(int r, int c) {
@@ -371,7 +400,33 @@ public class GameActivity extends AppCompatActivity {
 
             final int number = i;
             btnNum.setOnClickListener(v -> onNumberClick(number));
+
+            numButtons[i - 1] = btnNum; // Lưu nút vào mảng
             layoutNumPad.addView(btnNum);
+        }
+    }
+
+    private void updateNumPadUI() {
+        int[] counts = new int[10];
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                int val = board[r][c].getValue();
+                if (val >= 1 && val <= 9 && board[r][c].isValid()) {
+                    counts[val]++;
+                }
+            }
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            if (numButtons[i - 1] != null) {
+                if (counts[i] >= 9) {
+                    numButtons[i - 1].setEnabled(false);
+                    numButtons[i - 1].setAlpha(0.3f);
+                } else {
+                    numButtons[i - 1].setEnabled(true);
+                    numButtons[i - 1].setAlpha(1.0f);
+                }
+            }
         }
     }
 
@@ -383,11 +438,18 @@ public class GameActivity extends AppCompatActivity {
         if (!isNoteMode && cell.getValue() != 0) return;
 
         if (isNoteMode) {
-            moveStack.push(new MoveHistory(selectedRow, selectedCol, cell.getValue(), cell.getValue(), cell.getNotes(), cell.getNotes(), true));
+            Set<Integer> prevNotes = new HashSet<>(cell.getNotes());
+
             cell.toggleNote(number);
+
+            Set<Integer> newNotes = new HashSet<>(cell.getNotes());
+
+            moveStack.push(new MoveHistory(selectedRow, selectedCol, cell.getValue(), cell.getValue(), prevNotes, newNotes, true));
         } else {
             int oldValue = cell.getValue();
-            moveStack.push(new MoveHistory(selectedRow, selectedCol, oldValue, number, cell.getNotes(), cell.getNotes(), false));
+            Set<Integer> prevNotes = new HashSet<>(cell.getNotes());
+
+            moveStack.push(new MoveHistory(selectedRow, selectedCol, oldValue, number, prevNotes, new HashSet<>(), false));
 
             cell.setValue(number);
             cell.clearNotes();
@@ -397,7 +459,7 @@ public class GameActivity extends AppCompatActivity {
                 mistakesCount++;
                 updateMistakesUI();
 
-                if (mistakesCount >= MAX_MISTAKES) {
+                if (mistakesCount >= maxMistakes) {
                     updateBoardUI();
                     showGameOverDialog();
                     return;
@@ -408,6 +470,10 @@ public class GameActivity extends AppCompatActivity {
         }
         updateBoardUI();
     }
+
+
+
+
 
     private void validateBoard() {
         for (int r = 0; r < 9; r++) {
@@ -427,7 +493,16 @@ public class GameActivity extends AppCompatActivity {
             if (!moveStack.isEmpty()) {
                 MoveHistory lastMove = moveStack.pop();
                 SudokuCell cell = board[lastMove.getRow()][lastMove.getCol()];
-                cell.setValue(lastMove.getOldValue());
+
+                if (lastMove.isNoteChange()) {
+                    cell.setNotes(lastMove.getOldNotes());
+                } else {
+                    cell.setValue(lastMove.getOldValue());
+                    if (lastMove.getOldNotes() != null) {
+                        cell.setNotes(lastMove.getOldNotes());
+                    }
+                }
+
                 validateBoard();
                 updateBoardUI();
             }
@@ -467,7 +542,6 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Đảm bảo số tìm được phải khớp 100% với đáp án thực tế
                         if (possibleCount == 1 && lastValidNum == board[r][c].getSolutionValue()) {
                             applyHint(r, c, lastValidNum);
                             return;
@@ -499,7 +573,7 @@ public class GameActivity extends AppCompatActivity {
             }
             moveStack.clear();
             mistakesCount = 0;
-            hintsRemaining = INITIAL_HINTS;
+            hintsRemaining = initialHints;
             hintedRow = -1;
             hintedCol = -1;
 
@@ -536,7 +610,7 @@ public class GameActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Game Over! 😢")
-                .setMessage("Bạn đã sai quá 3 lần. Đừng nản chí, hãy thử lại nhé!")
+                .setMessage("Bạn đã sai quá " + maxMistakes + " lần. Đừng nản chí, hãy thử lại nhé!")
                 .setPositiveButton("Chơi lại ván này", (dialog, which) -> findViewById(R.id.btnRestart).performClick())
                 .setNegativeButton("Tạo ván mới", (dialog, which) -> loadNewGame())
                 .setCancelable(false)

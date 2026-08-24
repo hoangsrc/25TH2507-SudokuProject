@@ -9,11 +9,11 @@ import java.util.Set;
 public class SudokuCell {
     private int row;
     private int col;
-    private int value; // Giá trị hiện tại (0 là ô trống)
+    private int value;
     private int solutionValue; // Đáp án đúng của ô
-    private boolean isFixed; // true: số đề bài cho sẵn (không được sửa)
+    private boolean isFixed;
     private boolean isValid = true; // false: bị trùng hàng/cột/khối (hiển thị màu đỏ)
-    private Set<Integer> notes = new HashSet<>(); // Danh sách số ghi chú (Pencil/Notes)
+    private Set<Integer> notes = new HashSet<>();
 
     public SudokuCell(int row, int col, int value, int solutionValue, boolean isFixed) {
         this.row = row;
@@ -43,5 +43,17 @@ public class SudokuCell {
 
     public void clearNotes() {
         notes.clear();
+    }
+
+    public void setNotes(Set<Integer> newNotes) {
+        if (this.notes == null) {
+            this.notes = new HashSet<>();
+        } else {
+            this.notes.clear();
+        }
+
+        if (newNotes != null) {
+            this.notes.addAll(newNotes);
+        }
     }
 }

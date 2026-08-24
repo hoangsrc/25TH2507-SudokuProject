@@ -8,17 +8,14 @@ public class SudokuValidator {
     public static boolean isValidPlacement(int[][] board, int row, int col, int value) {
         if (value == 0) return true;
 
-        // 1. Kiểm tra hàng
         for (int c = 0; c < 9; c++) {
             if (c != col && board[row][c] == value) return false;
         }
 
-        // 2. Kiểm tra cột
         for (int r = 0; r < 9; r++) {
             if (r != row && board[r][col] == value) return false;
         }
 
-        // 3. Kiểm tra khối 3x3
         int startRow = (row / 3) * 3;
         int startCol = (col / 3) * 3;
         for (int r = startRow; r < startRow + 3; r++) {

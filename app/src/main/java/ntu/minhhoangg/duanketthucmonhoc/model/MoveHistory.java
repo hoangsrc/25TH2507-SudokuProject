@@ -31,4 +31,6 @@ public class MoveHistory {
     public int getNewValue() { return newValue; }
     public Set<Integer> getOldNotes() { return oldNotes; }
     public boolean isNoteChange() { return isNoteChange; }
+
+
 }
