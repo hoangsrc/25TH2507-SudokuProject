@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Set;
 import java.util.HashSet;
+import android.content.Intent;
+import android.net.Uri;
 
 import java.util.Stack;
 
@@ -80,6 +82,21 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> {
             saveCurrentProgress();
             finish();
+        });
+        findViewById(R.id.layoutAdBanner).setOnClickListener(v -> {
+            String adUrl = "https://youtube.com";
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(adUrl));
+            startActivity(intent);
+        });
+
+        TextView tvAdMarquee = findViewById(R.id.tvAdMarquee);
+        tvAdMarquee.setSelected(true);
+
+        findViewById(R.id.layoutAdBanner).setOnClickListener(v -> {
+            String adUrl = "https://youtube.com";
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(adUrl));
+            startActivity(intent);
         });
     }
 
