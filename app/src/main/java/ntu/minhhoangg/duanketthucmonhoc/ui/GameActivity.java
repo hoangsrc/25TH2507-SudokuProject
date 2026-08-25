@@ -92,12 +92,6 @@ public class GameActivity extends AppCompatActivity {
 
         TextView tvAdMarquee = findViewById(R.id.tvAdMarquee);
         tvAdMarquee.setSelected(true);
-
-        findViewById(R.id.layoutAdBanner).setOnClickListener(v -> {
-            String adUrl = "https://youtube.com";
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(adUrl));
-            startActivity(intent);
-        });
     }
 
     private int getMaxMistakesByDifficulty() {
