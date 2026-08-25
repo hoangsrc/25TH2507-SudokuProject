@@ -24,13 +24,16 @@
 
             <TextView
                 android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingEnd="12dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_home_button"
+                android:clickable="true"
+                android:elevation="3dp"
+                android:focusable="true"
+                android:gravity="center"
                 android:text="🏠"
-                android:textColor="#333333"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvCurrentDifficulty"
@@ -39,7 +42,7 @@
                 android:layout_weight="1"
                 android:text="Chế độ: Dễ"
                 android:textColor="#333333"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -49,7 +52,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="Lỗi: 0/3"
                 android:textColor="#DC2626"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -58,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textColor="#2563EB"
-                android:textSize="22sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -90,7 +93,7 @@
         </LinearLayout>
 
         <!-- Bàn bàn cờ GridLayout -->
-        <LinearLayout
+        =<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -205,7 +208,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="🔥 TẢI NGAY TRÊN GOOGLE PLAY - HÀNG NGÀN ỨNG DỤNG &amp; GAME MIỄN PHÍ DÀNH CHO BẠN! CHẠM VÀO ĐÂY ĐỂ KHÁM PHÁ NGAY... 🔥"
-            android:textColor="#38BDF1"
+            android:textColor="#102619"
             android:textSize="13sp"
             android:textStyle="bold" />
 
