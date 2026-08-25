@@ -1,14 +1,81 @@
 # Ứng dụng trò chơi Sudoku đơn giản
 
-<img src="Images/sudoku_logo.jpg" width="800">
+![LogoSudoku](Images/sudoku_logo.jpg)
 
 ![PLATFORM: ANDROID](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge)
 ![LANGUAGE: JAVA](https://img.shields.io/badge/Language-Java-blue?style=for-the-badge)
 
 ## 🎮 Giới thiệu
 
-**🧩Sudoku** là một trò chơi giải đố logic kinh điển, được yêu thích rộng rãi nhờ luật chơi đơn giản được phát triển trên nền tảng Android nhưng đòi hỏi tư duy suy luận cao.
+**Sudoku** là một trò chơi giải đố logic kinh điển, được yêu thích rộng rãi nhờ luật chơi đơn giản được phát triển trên nền tảng Android nhưng đòi hỏi tư duy suy luận cao.
 
 Ứng dụng cho phép người chơi tham gia các màn chơi Sudoku ở các chế độ khác nhau (Easy/ Medium/ Hard/ Expert), rèn luyện khả năng tư duy logic và kiểm tra kỹ năng giải quyết vấn đề thông qua việc sắp xếp các chữ số theo đúng quy tắc của trò chơi.
 
+      🟢 Easy	    🟡 Medium      	  🟠 Hard	    🔴 Expert
+
+      🟢 Dễ	        🟡 Trung bình	  🟠 Khó	    🔴 Chuyên gia
+
 Dự án được xây dựng nhằm mục đích học tập và thực hành phát triển ứng dụng Android, đồng thời làm quen với việc thiết kế giao diện và xây dựng logic xử lý cho một trò chơi Sudoku.
+
+---
+
+## ✨ Tính năng chính
+
+### 1. 🎯 Hệ Thống Độ Khó
+
+Ứng dụng cung cấp nhiều mức độ chơi, phù hợp với khả năng của từng người dùng:
+
+🟢 Easy – Dành cho người mới bắt đầu.
+
+🟡 Medium – Mức độ thử thách trung bình.
+
+🟠 Hard – Yêu cầu khả năng suy luận tốt hơn.
+
+🔴 Expert – Mức độ khó cao dành cho người chơi có kinh nghiệm.
+
+Mỗi mức độ sẽ tạo ra một bảng Sudoku với độ khó tương ứng, giúp người chơi có thể lựa chọn thử thách phù hợp.
+
+### 2. 🔢 Bảng Sudoku 9×9
+
+Giao diện chính hiển thị bảng Sudoku tiêu chuẩn 9×9, bao gồm các ô đã được cung cấp sẵn và các ô trống để người chơi điền đáp án.
+
+Người chơi có thể lựa chọn một ô và nhập các chữ số từ 1 đến 9. Các ô được hệ thống tạo sẵn sẽ không thể thay đổi.
+
+### 3. ✅ Kiểm Tra Đáp Án
+
+Hệ thống tự động kiểm tra các số người chơi nhập dựa trên luật Sudoku.
+
+Hệ thống tự động trừ lượt có thể nhập sai hiện tại khi người dùng nhập sai đáp án. Điều này giúp người chơi nhận biết và điều chỉnh cách giải trong quá trình chơi.
+
+Khi toàn bộ bảng được hoàn thành chính xác, hệ thống sẽ xác nhận và hiện thông báo người chơi đã hoàn thành ván Sudoku.
+
+### 4. 💡 Công Cụ Hỗ Trợ
+
+Để hỗ trợ người chơi trong quá trình giải, ứng dụng cung cấp các công cụ:
+
+💡 Hint: Cung cấp gợi ý khi người chơi gặp khó khăn.
+
+📝 Note: Cho phép người chơi túy ý ghi chú các số mà ngươi chơi cho rằng phù hợp với một ô đang được chọn.
+
+↩️ Undo: Hoàn tác thao tác nhập số (kể cả số ghi nhập ở phần Note) trước đó.
+
+⏱️ Timer: Theo dõi thời gian người chơi đã sử dụng (từ lúc chọn chế độ chơi/ chơi lại(đúng độ khó và đề vừa được hiển thị)/ ván mới) để hoàn thành ván.
+
+💾 Lưu tiến trình: Hệ thống tự động đóng băng tất cả các tiến trình mà đã được người chơi thực hiện (thời gian đã chạy/ đáp án đã được chọn/ lượt có thể sai còn lại/ lượt gợi ý còn lại) khi người chơi tắt ứng dụng hoặc thoát ra trang chủ ở mọi chế độ chơi
+
+### 5. 🔄 Quản Lý Ván Chơi
+
+Người chơi có thể quản lý và bắt đầu lại ván chơi thông qua các chức năng:
+
+🔄 Chơi lại: Đưa bảng Sudoku hiện tại về trạng thái ban đầu.
+
+🆕 Ván mới: Tạo một bảng Sudoku mới.
+
+### 6. 🏆 Kết Quả & Thành Tích
+
+Sau khi hoàn thành Sudoku, ứng dụng ghi nhận kết quả của người chơi dựa trên thời gian hoàn thành và mức độ khó.
+
+Kết quả tốt nhất có thể được lưu lại với mục đích để người chơi theo dõi thành tích và cố gắng cải thiện kỷ lục của mình.
+
+
+
