@@ -662,6 +662,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        saveCurrentProgress();
         if (timerHelper != null) {
             timerHelper.pause();
         }
