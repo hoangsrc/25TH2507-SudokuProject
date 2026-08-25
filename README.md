@@ -93,3 +93,33 @@ Kết quả tốt nhất có thể được lưu lại với mục đích để 
   
 - **Lưu trữ dữ liệu:** `SharedPreferences`
   
+## 📁 Cấu Trúc Thư Mục Dự Án (Cốt Lõi)
+
+Dưới đây là sơ đồ tổ chức chứa các thư mục chính của ứng dụng Sudoku:
+
+```text
+📁 app/
+└── 📁 src/
+    └── 📁 main/
+        ├── 📁 java/ntu/minhhoangg/duanketthucmonhoc/
+        │   ├── 📁 data/
+        │   │   ├── 📄 PuzzleRepository.java             # Quản lý và cung cấp các bộ đề cho ứng dụng
+        │   │   └── 📄 ScoreManager.java                 # Quản lý và lưu trữ thành tích người chơi  
+        │   ├── 📁 logic/
+        │   │   └── 📄 SudokuValidator.java              # Kiểm tra tính hợp lệ của các đáp án Sudoku
+        │   ├── 📁 model/
+        │   │   ├── 📄 MoveHistory.java                  # Lưu lịch sử các thao tác để hỗ trợ Undo
+        │   │   └── 📄 SudokuCell.java                   # Mô hình dữ liệu cho từng ô Sudoku
+        │   ├── 📁 ui/
+        │   │   ├── 📄 GameActivity.java                 # Màn hình chính của ván Sudoku
+        │   │   └── 📄 HomeActivity.java                 # Màn hình trang chủ, lựa chọn và bắt đầu chế độ muốn chơi
+        │   ├── 📁 util/
+        │   │   └── 📄 TimerHelper.java                  # Hỗ trợ quản lý và tính thời gian chơi
+        │   │       
+        │   └── 📄 MainActivity.java                     # Màn hình khởi động của ứng dụng
+        └── 📁 res/
+            ├── 📁 drawable/                             # Hình ảnh và tài nguyên drawable của ứng dụng
+            ├── 📁 layout/
+                ├── 📄 activity_main.xml                 # Giao diện màn hình khởi động
+                ├── 📄 activity_home.xml                 # Giao diện lựa chọn chế độ chơi
+                └── 📄 activity_game.xml                 # Giao diện chính của ván Sudoku
