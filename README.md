@@ -7,15 +7,15 @@
 
 ## 🎮 Giới thiệu
 
-**Sudoku** là một trò chơi giải đố logic kinh điển, được yêu thích rộng rãi nhờ luật chơi đơn giản được phát triển trên nền tảng Android nhưng đòi hỏi tư duy suy luận cao.
+- **Sudoku** là một trò chơi giải đố logic kinh điển, được yêu thích rộng rãi nhờ luật chơi đơn giản và được phát triển - tối ưu trên nền tảng Android nhưng để chơi và phá đảo thì đòi hỏi phải sử dụng tư duy suy luận.
 
-Ứng dụng cho phép người chơi tham gia các màn chơi Sudoku ở các chế độ khác nhau (Easy/ Medium/ Hard/ Expert), rèn luyện khả năng tư duy logic và kiểm tra kỹ năng giải quyết vấn đề thông qua việc sắp xếp các chữ số theo đúng quy tắc của trò chơi.
+- Ứng dụng cho phép người chơi tham gia các màn chơi Sudoku ở các chế độ khác nhau (Easy/ Medium/ Hard/ Expert), rèn luyện khả năng tư duy logic và kiểm tra kỹ năng giải quyết vấn đề thông qua việc sắp xếp các chữ số theo đúng quy tắc của trò chơi.
 
-      🟢 Easy	    🟡 Medium      	  🟠 Hard	    🔴 Expert
+      🟢 Easy	    🟡 Medium            🟠 Hard	    🔴 Expert
 
-      🟢 Dễ	        🟡 Trung bình	  🟠 Khó	    🔴 Chuyên gia
+      🟢 Dễ	    🟡 Trung bình        🟠 Khó	    🔴 Chuyên gia
 
-Dự án được xây dựng nhằm mục đích học tập và thực hành phát triển ứng dụng Android, đồng thời làm quen với việc thiết kế giao diện và xây dựng logic xử lý cho một trò chơi Sudoku.
+- Dự án được xây dựng nhằm mục đích học tập và thực hành phát triển ứng dụng Android, đồng thời làm quen với việc thiết kế giao diện và xây dựng logic xử lý cho một trò chơi Sudoku.
 
 ---
 
@@ -59,9 +59,9 @@ Khi toàn bộ bảng được hoàn thành chính xác, hệ thống sẽ xác 
 
 ↩️ Undo: Hoàn tác thao tác nhập số (kể cả số ghi nhập ở phần Note) trước đó.
 
-⏱️ Timer: Theo dõi thời gian người chơi đã sử dụng (từ lúc chọn chế độ chơi/ chơi lại(đúng độ khó và đề vừa được hiển thị)/ ván mới) để hoàn thành ván.
+⏱️ Timer: Theo dõi thời gian chơi, bắt đầu đếm từ khi người chơi chọn chế độ chơi, chơi lại đúng đề Sudoku hiện tại hoặc bắt đầu ván mới.
 
-💾 Lưu tiến trình: Hệ thống tự động đóng băng tất cả các tiến trình mà đã được người chơi thực hiện (thời gian đã chạy/ đáp án đã được chọn/ lượt có thể sai còn lại/ lượt gợi ý còn lại) khi người chơi tắt ứng dụng hoặc thoát ra trang chủ ở mọi chế độ chơi
+💾 Lưu tiến trình: Hệ thống tự động lưu lại toàn bộ trạng thái của ván chơi khi người chơi tắt ứng dụng hoặc quay về trang chủ, bao gồm thời gian đã chơi, các đáp án đã nhập, số lượt sai còn lại và số lượt gợi ý còn lại. Khi quay lại, người chơi có thể tiếp tục ván chơi từ trạng thái trước đó.
 
 ### 5. 🔄 Quản Lý Ván Chơi
 
@@ -77,5 +77,19 @@ Sau khi hoàn thành Sudoku, ứng dụng ghi nhận kết quả của người 
 
 Kết quả tốt nhất có thể được lưu lại với mục đích để người chơi theo dõi thành tích và cố gắng cải thiện kỷ lục của mình.
 
+---
 
+## 🛠️ Công Nghệ Sử Dụng
 
+- **IDE / Ngôn ngữ:** Android Studio | Java (JDK 11)
+  
+- **Nền tảng:** Android
+  
+- **Quản lý Build:** Gradle Kotlin DSL (`build.gradle.kts`)
+  
+- **Android SDK:** API 37
+  
+- **Giao diện:** XML | `LinearLayout` | `ConstraintLayout` | `CardView` | `GridLayout` | `FrameLayout`
+  
+- **Lưu trữ dữ liệu:** `SharedPreferences`
+  
