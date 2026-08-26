@@ -141,9 +141,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void saveCurrentProgress() {
-        if (timerHelper != null) {
-            timerHelper.pause();
-        }
 
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
