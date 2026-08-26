@@ -123,3 +123,48 @@ Dưới đây là sơ đồ tổ chức chứa các thư mục chính của ứn
                 ├── 📄 activity_main.xml                 # Giao diện màn hình khởi động
                 ├── 📄 activity_home.xml                 # Giao diện lựa chọn chế độ chơi
                 └── 📄 activity_game.xml                 # Giao diện chính của ván Sudoku
+```
+
+### 🏠 1. Màn hình chính - 🎯 Chọn độ khó
+
+<img src="Images/trangchu.jpg" height="800" width="auto">
+
+#### **Tại giao diện màn hình chính này, người chơi có thể lựa chọn để chơi một mức độ khó khác nhau để chơi.**
+
+### 🔢 2. Bắt đầu ván chơi
+
+<img src="Images/OTrong.jpg" height="800" width="auto">
+
+#### **Sau khi chọn độ khó, hệ thống tạo một bảng Sudoku 9×9.**
+
+### ✏️ 3. Nhập đáp án
+
+<img src="Images/NhapSoOTrong.jpg" height="800" width="auto">
+
+#### **Người chơi chọn ô trống và nhập một số từ 1 đến 9 vào trong ô trống được chọn.**
+
+### 💡 4. Sử dụng công cụ hỗ trợ
+
+<img src="Images/Hint.jpg" height="800" width="auto">
+
+#### **Màn hình hiển thị ghi người chơi chọn "Gợi ý"**
+
+---
+
+<img src="Images/Note.jpg" height="800" width="auto">
+
+#### **Màn hình hiển thị ghi người chơi chọn "Ghi chú"**
+
+#### **Ngoài ra người chơi có thể sử dụng Undo để hoàn tác thao tác vừa thực hiện.**
+
+### 🏆 5. Hoàn thành - Thất bại ván chơi
+
+<img src="Images/Thang.jpg" height="800" width="auto">
+
+#### **Khi hoàn thành chính xác bảng Sudoku, hệ thống thông báo kết quả...**
+
+---
+
+<img src="Images/Thua.jpg" height="800" width="auto">
+
+#### **Nếu người chơi đạt tốt đa lượt có thể sai, hệ thống thông báo kết quả**
