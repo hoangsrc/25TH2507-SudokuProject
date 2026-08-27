@@ -25,8 +25,10 @@ import ntu.minhhoangg.duanketthucmonhoc.model.MoveHistory;
 import ntu.minhhoangg.duanketthucmonhoc.model.SudokuCell;
 import ntu.minhhoangg.duanketthucmonhoc.util.TimerHelper;
 
+// Màn hình chính xử lý ván chơi Sudoku
 public class GameActivity extends AppCompatActivity {
 
+    // Khai báo các biến lưu trữ dữ liệu bàn cờ và giao diện
     private static final String PREF_NAME = "SudokuData";
     private int maxMistakes;
     private int initialHints;
@@ -53,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
     private TimerHelper timerHelper;
     private ScoreManager scoreManager;
 
+    // Hàm chạy đầu tiên khi mở màn hình game
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -94,6 +97,7 @@ public class GameActivity extends AppCompatActivity {
         tvAdMarquee.setSelected(true);
     }
 
+    // Lấy số lỗi tối đa tùy theo mức độ khó
     private int getMaxMistakesByDifficulty() {
         switch (difficulty.toUpperCase()) {
             case "EASY": return 5;
@@ -105,6 +109,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Lấy số lượt gợi ý ban đầu theo độ khó
     private int getInitialHintsByDifficulty() {
         switch (difficulty.toUpperCase()) {
             case "EASY": return 5;
@@ -116,6 +121,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Ánh xạ các view từ XML vào code
     private void initViews() {
         gridBoard = findViewById(R.id.gridBoard);
         tvTimer = findViewById(R.id.tvTimer);
@@ -127,12 +133,14 @@ public class GameActivity extends AppCompatActivity {
         timerHelper = new TimerHelper(tvTimer);
     }
 
+    // Cập nhật dòng chữ hiển thị số lỗi trên màn hình
     private void updateMistakesUI() {
         if (tvMistakes != null) {
             tvMistakes.setText("Lỗi: " + mistakesCount + "/" + maxMistakes);
         }
     }
 
+    // Cập nhật số lượt gợi ý còn lại trên nút bấm
     private void updateHintUI() {
         TextView btnHint = findViewById(R.id.btnHint);
         if (btnHint != null) {
@@ -140,6 +148,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Lưu lại bàn cờ và thông tin ván game vào bộ nhớ máy
     private void saveCurrentProgress() {
 
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -149,7 +158,7 @@ public class GameActivity extends AppCompatActivity {
         editor.putLong(difficulty + "_time", timerHelper.getSecondsElapsed());
         editor.putInt(difficulty + "_hints", hintsRemaining);
 
-        // Serialize board state
+        // Chuỗi hóa bàn cờ để lưu trữ đơn giản hơn
         StringBuilder currentBoardStr = new StringBuilder();
         StringBuilder initialBoardStr = new StringBuilder();
         StringBuilder solutionBoardStr = new StringBuilder();
@@ -170,6 +179,7 @@ public class GameActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    // Tải lại ván chơi dở từ bộ nhớ máy
     private void restoreSavedGame() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
@@ -241,11 +251,13 @@ public class GameActivity extends AppCompatActivity {
         timerHelper.start();
     }
 
+    // Đánh dấu xóa dữ liệu ván cũ khi thắng hoặc thua
     private void clearSavedProgress() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         prefs.edit().putBoolean(difficulty + "_hasSavedGame", false).apply();
     }
 
+    // Đề xuất và tạo mới một bàn cờ game từ đầu
     private void loadNewGame() {
         gridBoard.removeAllViews();
         gridBoard.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
@@ -304,6 +316,7 @@ public class GameActivity extends AppCompatActivity {
         timerHelper.start();
     }
 
+    // Vẽ lại màu sắc, số và ghi chú trên toàn bộ bàn cờ
     private void updateBoardUI() {
         int selectedValue = 0;
         if (selectedRow != -1 && selectedCol != -1) {
@@ -366,6 +379,7 @@ public class GameActivity extends AppCompatActivity {
         updateNumPadUI();
     }
 
+    // Đánh dấu ô đang được người dùng bấm chọn
     private void selectCell(int r, int c) {
         selectedRow = r;
         selectedCol = c;
@@ -374,6 +388,7 @@ public class GameActivity extends AppCompatActivity {
         updateBoardUI();
     }
 
+    // Kiểm tra xem số điền vào ô có vi phạm hàng, cột hay khối 3x3 không
     private boolean isValidPlacement(int r, int c, int num) {
         for (int i = 0; i < 9; i++) {
             if (board[r][i].getValue() == num) return false;
@@ -390,6 +405,7 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
+    // Tạo dãy nút bấm chọn số từ 1 đến 9 bên dưới
     private void setupNumPad() {
         LinearLayout layoutNumPad = findViewById(R.id.layoutNumPad);
         layoutNumPad.removeAllViews();
@@ -414,6 +430,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Tự động mờ/khóa các nút số đã điền đủ 9 lần trên bàn cờ
     private void updateNumPadUI() {
         int[] counts = new int[10];
         for (int r = 0; r < 9; r++) {
@@ -438,6 +455,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Xử lý logic khi bấm vào nút số (đơn thuần điền số hoặc ghi chú)
     private void onNumberClick(int number) {
         if (selectedRow == -1 || selectedCol == -1) return;
         SudokuCell cell = board[selectedRow][selectedCol];
@@ -479,10 +497,7 @@ public class GameActivity extends AppCompatActivity {
         updateBoardUI();
     }
 
-
-
-
-
+    // So sánh các ô đã nhập với đáp án gốc
     private void validateBoard() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
@@ -496,6 +511,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Cài đặt sự kiện bấm cho dãy chức năng (Undo, Tẩy, Ghi chú, Gợi ý, Chơi lại)
     private void setupToolBar() {
         findViewById(R.id.btnUndo).setOnClickListener(v -> {
             if (!moveStack.isEmpty()) {
@@ -595,6 +611,7 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    // Điền đáp án gợi ý vào ô được chọn
     private void applyHint(int r, int c, int value) {
         hintsRemaining--;
         updateHintUI();
@@ -612,6 +629,7 @@ public class GameActivity extends AppCompatActivity {
         checkWinCondition();
     }
 
+    // Hiện hộp thoại báo thua khi nhập sai quá số lần cho phép
     private void showGameOverDialog() {
         clearSavedProgress();
         timerHelper.pause();
@@ -625,6 +643,7 @@ public class GameActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Kiểm tra đã hoàn thành bàn cờ chưa để hiện hộp thoại thắng
     private void checkWinCondition() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
@@ -650,6 +669,7 @@ public class GameActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Tự động lưu tiến trình ở chế độ chơi mà người dùng vừa chơi và tạm dừng đồng hồ khi thoát/ẩn ứng dụng/quay lại trang chủ
     @Override
     protected void onPause() {
         super.onPause();
@@ -659,6 +679,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    // Cho đồng hồ chạy tiếp khi mở lại ứng dụng
     @Override
     protected void onResume() {
         super.onResume();
