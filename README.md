@@ -1,4 +1,4 @@
-# Ứng dụng trò chơi Sudoku đơn giản
+# Ứng dụng trò chơi Sudoku đơn giản (Basic Sudoku)
 
 ![LogoSudoku](Images/sudoku_logo.jpg)
 
