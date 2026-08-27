@@ -5,7 +5,7 @@
 ![PLATFORM: ANDROID](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge)
 ![LANGUAGE: JAVA](https://img.shields.io/badge/Language-Java-blue?style=for-the-badge)
 
-## 🎮 Giới thiệu
+## 📄 Giới thiệu
 
 - **Sudoku** là một trò chơi giải đố logic kinh điển, được yêu thích rộng rãi nhờ luật chơi đơn giản và được phát triển - tối ưu trên nền tảng Android nhưng để chơi và phá đảo thì đòi hỏi phải sử dụng tư duy suy luận.
 
@@ -93,7 +93,7 @@ Kết quả tốt nhất có thể được lưu lại với mục đích để 
   
 - **Lưu trữ dữ liệu:** `SharedPreferences`
   
-## 📁 Cấu Trúc Thư Mục Dự Án (Cốt Lõi)
+## 📁 Cấu Trúc Thư Mục Dự Án
 
 Dưới đây là sơ đồ tổ chức chứa các thư mục chính của ứng dụng Sudoku:
 
@@ -124,6 +124,8 @@ Dưới đây là sơ đồ tổ chức chứa các thư mục chính của ứn
                 ├── 📄 activity_home.xml                 # Giao diện lựa chọn chế độ chơi
                 └── 📄 activity_game.xml                 # Giao diện chính của ván Sudoku
 ```
+
+## 🎮 Hướng Dẫn Chơi & Giao Diện Ứng Dụng
 
 ### 🏠 1. Màn hình chính - 🎯 Chọn độ khó
 
@@ -161,10 +163,36 @@ Dưới đây là sơ đồ tổ chức chứa các thư mục chính của ứn
 
 <img src="Images/Thang.jpg" height="800" width="auto">
 
-#### **Khi hoàn thành chính xác bảng Sudoku, hệ thống thông báo kết quả...**
+#### **Khi hoàn thành chính xác bảng Sudoku, hệ thống thông báo kết quả.**
 
 ---
 
 <img src="Images/Thua.jpg" height="800" width="auto">
 
 #### **Nếu người chơi đạt tốt đa lượt có thể sai, hệ thống thông báo kết quả**
+
+---
+
+## 🧩 Luật Chơi & Logic Sudoku
+
+Sudoku được chơi trên một bảng gồm **9×9 ô**, được chia thành **9 vùng nhỏ 3×3**. Mục tiêu của người chơi là điền các chữ số từ **1 đến 9** vào các ô trống, với mỗi ô trống chỉ được chọn một số sao cho tuân thủ các quy tắc sau.
+
+### 🔢 Quy Tắc Hàng - Cột
+
+Mỗi hàng - cột phải chứa đầy đủ các số từ **1 đến 9** và **không được có số trùng lặp**.
+
+### 🧩 Quy Tắc Vùng 3×3
+
+Mỗi vùng nhỏ có kích thước **3×3** cũng phải chứa các số từ **1 đến 9**, trong đó **không được phép trùng lặp số**.
+
+### ✅ Kiểm Tra Đáp Án
+
+Khi người chơi nhập một số vào bảng Sudoku, hệ thống sẽ kiểm tra tính hợp lệ của số đó dựa trên:
+
+- Hàng hiện tại
+- Cột hiện tại
+- Vùng 3×3 tương ứng
+
+Một số được xem là hợp lệ khi không vi phạm bất kỳ quy tắc nào của Sudoku.
+
+Khi toàn bộ **81 ô** được điền chính xác theo các quy tắc trên, ván chơi được xác nhận là hoàn thành.
